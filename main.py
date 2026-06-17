@@ -11,6 +11,11 @@ class Task(BaseModel):
     description: str
     completed: bool = False
 
+class TaskUpdate(BaseModel):
+    title: str | None = None
+    description: str | None = None
+    completed: bool | None = None
+
 
 @app.get("/")
 def home():
@@ -36,5 +41,45 @@ def get_task(task_id: int):
     for task in tasks:
         if task["id"] == task_id:
             return task
+
+    return {"error": "Task not found"}
+
+
+@app.put("/tasks/{task_id}")
+def update_task(task_id: int, updated_task: Task):
+    for task in tasks:
+        if task["id"] == task_id:
+
+            task["title"] = updated_task.title
+            task["description"] = updated_task.description
+            task["completed"] = updated_task.completed
+
+            return task
+
+    return {"error": "Task not found"}
+
+
+@app.patch("/tasks/{task_id}")
+def patch_task(task_id: int, task_update: TaskUpdate):
+    for task in tasks:
+        if task["id"] == task_id:
+
+            updates = task_update.model_dump(exclude_unset=True)
+
+            task.update(updates)
+
+            return task
+
+    return {"error": "Task not found"}
+
+
+@app.delete("/tasks/{task_id}")
+def delete_task(task_id: int):
+    for task in tasks:
+        if task["id"] == task_id:
+
+            tasks.remove(task)
+
+            return {"message": "Task deleted successfully"}
 
     return {"error": "Task not found"}
