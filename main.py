@@ -1,16 +1,19 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 
+# we create the fastapi application object
 app = FastAPI()
 
+# initially, this is empty, created tasks can be stored here in JSON
 tasks = []
 
-
+# structure of all tasks, predefined false because its a to do/ task manager type of thing, so if you dont put anything, its just default false
 class Task(BaseModel):
     title: str
     description: str
     completed: bool = False
 
+# this is for PATCH requests, here all fields arent needed.
 class TaskUpdate(BaseModel):
     title: str | None = None
     description: str | None = None
