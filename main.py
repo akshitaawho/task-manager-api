@@ -25,3 +25,16 @@ def create_task(task: Task):
     tasks.append(task_dict)
 
     return task_dict
+
+@app.get("/tasks")
+def get_tasks():
+    return tasks
+
+
+@app.get("/tasks/{task_id}")
+def get_task(task_id: int):
+    for task in tasks:
+        if task["id"] == task_id:
+            return task
+
+    return {"error": "Task not found"}
